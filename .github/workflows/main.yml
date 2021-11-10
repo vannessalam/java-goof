@@ -24,7 +24,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: Running Open Source Security by Snyk
+        run: |
+          curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux" 
+          chmod -R +x ./snyk 
+          ./snyk auth ${{ secrets.SNYK_GRP1_TOKEN }} 
+          ./snyk monitor
+          
+      - name: Running Horusec Security
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
+          horusec start -p .
+          
       - name: Build the Docker image
         run: |
           DOCKER_BUILDKIT=1 docker build -t todolist . 
