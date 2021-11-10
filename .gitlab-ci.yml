@@ -1,0 +1,8 @@
+stages:
+    - test
+mobsfscan:
+    image: python
+    before_script:
+        - pip3 install --upgrade mobsfscan
+    script:
+        - mobsfscan .
